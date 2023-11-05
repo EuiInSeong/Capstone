@@ -9,3 +9,5 @@ DATABASES = {
     }
 }
 SECRET_KEY = 'django-insecure-x&1a-w5=!#wa)bspaqariwji*1@e2mw9-z1jwcp67_66!(7g7w'
+
+#Database

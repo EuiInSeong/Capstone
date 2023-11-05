@@ -8,8 +8,8 @@ def index(request):
     print(activity.values()[0]['ip'])
     return HttpResponse("Hello, world. You're at the capstone index.")
 
-def insertactivity(request, ip, gyrox, gyroy, gyroz):
-    print(ip, gyrox, gyroy, gyroz)
-    ac = Activity(ip=ip, gyrox=gyrox, gyroy=gyroy, gyroz=gyroz, time=datetime.datetime.now())
+def insertactivity(request, ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z):
+    print(ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z)
+    ac = Activity(ip=ip, Acc_x = Acc_x,Acc_y = Acc_y,Acc_z = Acc_z,Gyro_x=Gyro_x, Gyro_y=Gyro_y, Gyro_z=Gyro_z, DateTime=datetime.datetime.now())
     ac.save()
     return HttpResponse("save done")
