@@ -15,12 +15,17 @@ class Activity(models.Model):
         managed = True
 
 
-#Database table
+# Database table
 
-# class mealAmount(models.Model):
-#     #급식기 ip
-#     ip = models.CharField(max_length = 100, blank = True,null=True)
-#     id = models.CharField(max_length=100,blank = True,null=True)
-#     mealAmount = models.IntegerField(default=0)
+class mealAmount(models.Model):
+    #급식기 ip
+    ip = models.CharField(max_length = 100, blank = True,null=True)
+    dogip = models.CharField(max_length=100,blank = True,null=True)
+    mealAmount = models.IntegerField(default=0)
+    
+    class Meta:
+        db_table = 'mealAmount'
+        managed = True
+    
     
     
