@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from .models import Activity
 from .models import mealAmount
 import datetime
-from rest_framework.response import Response
 
 def index(request):
     activity = Activity.objects.all()
@@ -20,9 +19,12 @@ def getmealAmount(request,ip):
     # mealAmount = calculateMealAmount()
     # TCP CLIENT한테 소켓으로 MEAL AMOUNT 전송
     print("qew")
-    return Response("100")
+    return HttpResponse("100")
 
 
 def calculateMealAmount():
     # 디비 쿼리 호출 하고 -> 밥량 계산
     mealAmount.objects.all()
+    
+    
+    # 5분 - 100개 : 최소, 최대 차이 
