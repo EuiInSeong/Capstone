@@ -1,9 +1,11 @@
 from django.urls import path
-
 from . import views
+from .views import ActivityListAPIView
 
 urlpatterns = [
     path("", views.index, name="index"),
+    # path("/",views.dog_dadog_datata, name = "dog_data"),
     path("insertactivity/<str:ip>/<str:Acc_x>/<str:Acc_y>/<str:Acc_z>/<str:Gyro_x>/<str:Gyro_y>/<str:Gyro_z>", views.insertactivity, name="insertactivity"),
-    path("getmealAmount/<str:ip>",views.getmealAmount, name = "getmealAmount")
+    path("getmealAmount/<str:ip>",views.getmealAmount, name = "getmealAmount"),
+    path("activity" ,ActivityListAPIView.as_view(), name = 'activity_list')
 ]

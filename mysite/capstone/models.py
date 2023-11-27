@@ -9,9 +9,12 @@ class Activity(models.Model):
     Gyro_y = models.FloatField(blank=True, null=True)
     Gyro_z = models.FloatField(blank=True, null=True)
     DateTime = models.DateTimeField(blank=True, null=True)
-
+    
+    # def __init__(self, ip, Acc_x, Acc_y, Acc_z, Gyro_x, Gyro_y, Gyro_z, DateTime):
+    #     print("create")
+        
     class Meta:
-        db_table = 'activity'
+        db_table = 'Activity'
         managed = True
 
 
@@ -20,7 +23,7 @@ class Activity(models.Model):
 class mealAmount(models.Model):
     #급식기 ip
     ip = models.CharField(max_length = 100, blank = True,null=True)
-    dogip = models.CharField(max_length=100,blank = True,null=True)
+    dogip = models.CharField(max_length = 100,blank = True,null=True)
     mealAmount = models.IntegerField(default=0)
     
     class Meta:
