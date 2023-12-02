@@ -1,20 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import Activity
 from .models import mealAmount
+from .models import DogStatus
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializer import ActivitySerializer
-from .models import Activity
+from django.core import serializers
 import datetime
+import serial
 
-class ActivityListAPIView(generics.ListAPIView):
-    queryset = Activity.objects.all()
-    serializer_class = ActivitySerializer
-    
 
 def index(request):
     activity = Activity.objects.all()
@@ -26,20 +23,62 @@ def insertactivity(request, ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z):
     ac = Activity(ip=ip, Acc_x = Acc_x,Acc_y = Acc_y,Acc_z = Acc_z,Gyro_x=Gyro_x, Gyro_y=Gyro_y, Gyro_z=Gyro_z, DateTime=datetime.datetime.now())
     ac.save()
     return HttpResponse("save done")
-    
-def getmealAmount(request,ip):
-    # mealAmount = calculateMealAmount()
-    # TCP CLIENT한테 소켓으로 MEAL AMOUNT 전송
-    return HttpResponse("100")
+
+def activity(request):
+    queryset = Activity.objects.all()
+    item = serializers.serialize("json", queryset)
+    return HttpResponse(item, status=200)
+
+def getmealAmount(request):
+    resultMealAmount = calculateMealAmount()
+    return HttpResponse(resultMealAmount)
+
+def insertStatus(request, ip, walking, resting, running, accumulatedMeal):
+    print(ip, walking, resting, running)
+    st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = accumulatedMeal, Date = datetime.datetime.now())
+    st.save()
+    return HttpResponse("status stored")
 
 def calculateMealAmount():
-    # 디비 쿼리 호출 하고 -> 밥량 계산
-    mealAmount.objects.all()
+    # 디비 쿼리 호출 하고 -> 밥량 계산    
+    # dogStatus = DogStatus.objects.all()
+    mealAmount = 0
+    latestStatus = DogStatus.objects.order_by('-id').first()
+    mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
+    print(mealAmount)
+    return mealAmount
     
     
-    # 5분 - 100개 : 최소, 최대 차이 
     
-    # ser = serial.Serial(
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+#     5분 - 100개 : 최소, 최대 차이 
+    
+#     ser = serial.Serial(
 #     port = 'COM3',
 #     baudrate = 9600,
 # )
