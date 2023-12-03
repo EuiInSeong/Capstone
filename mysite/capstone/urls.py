@@ -7,5 +7,5 @@ urlpatterns = [
     path("insertactivity/<str:ip>/<str:Acc_x>/<str:Acc_y>/<str:Acc_z>/<str:Gyro_x>/<str:Gyro_y>/<str:Gyro_z>", views.insertactivity, name="insertactivity"),
     path("getmealAmount/",views.getmealAmount, name = "getmealAmount"),
     path("activity" ,views.activity, name = 'activity'),
-    path("insertstatus/<str:ip>/<str:walking>/<str:resting>/<str:running>", views.insertStatus, name = "insertstatus"),   
+    path("insertstatus/<str:ip>/<str:walking>/<str:resting>/<str:running>/<str:accumulatedMeal>", views.insertStatus, name = "insertstatus"),   
 ]

@@ -35,24 +35,23 @@ def activity(request):
 
 def getmealAmount(request):
     latestStatus = DogStatus.objects.order_by('-id').first()
-    resultMealAmount = latestStatus.values('accumulatedMeal')
+    resultMealAmount = latestStatus.accumulatedMeal
     return HttpResponse(resultMealAmount)
 
-def insertStatus(request, ip, walking, resting, running):
+def insertStatus(request, ip, walking, resting, running, accumulatedMeal):
     print(ip, walking, resting, running)
-    mealAmount = int(walking)//60 + int(running)//30 + int(resting)//180
-    st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = mealAmount, Date = datetime.datetime.now())
+    st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = accumulatedMeal, Date = datetime.datetime.now())
     st.save()
     return HttpResponse("status saved")
 
-# def calculateMealAmount():
-#     # 디비 쿼리 호출 하고 -> 밥량 계산    
-#     # dogStatus = DogStatus.objects.all()
+def calculateMealAmount():
+    # 디비 쿼리 호출 하고 -> 밥량 계산    
+    # dogStatus = DogStatus.objects.all()
     
-#     latestStatus = DogStatus.objects.order_by('-id').first()
-#     # mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
-#     print(mealAmount)
-#     return mealAmount
+    latestStatus = DogStatus.objects.order_by('-id').first()
+    mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
+    print(mealAmount)
+    return mealAmount
 
 file_path = "C:/Users/home/downloads/model1 (1).pkl"
 with open(file_path , 'rb') as f:
@@ -67,26 +66,29 @@ def storeStatus():
     avgGyro_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_z'))['Gyro_z__sum']//10
 
     status = loaded_model.predict([[avgAcc_x,avgAcc_y,avgAcc_z,avgGyro_x,avgGyrp_y,avgGyro_z]])[0]
-    print(status)
     latestStatus = DogStatus.objects.order_by('-id').first()
     latestWalk = latestStatus.walking
     latestRest = latestStatus.resting
     latestRun = latestStatus.running 
-    latestMeal = latestStatus.accumulatedMeal
-
-    print(latestMeal)
-    st = DogStatus(latestStatus.ip, latestWalk, latestRest, latestRun, latestMeal, datetime.datetime.now())
+    latestMeal = latestWalk + latestRest*2 + latestRun*3
+    print(status)
+    
+    st = DogStatus(ip = 1, walking = latestWalk, resting = latestRest, running = latestRun, accumulatedMeal = latestMeal, Date =  datetime.datetime.now())
+    st.save()
     if(int(status) == 0):
-        st = DogStatus(latestStatus.ip, latestWalk + 1, latestRest, latestRun, latestMeal,datetime.datetime.now())
-        st.save()
+        stNew = DogStatus(1, walking = latestWalk + 1, resting = latestRest, running = latestRun, accumulatedMeal = latestMeal, Date = datetime.datetime.now())
+        stNew.save()
+        print("saved")
     elif(int(status) == 1):
-        st = DogStatus(latestStatus.ip, str(latestWalk), str(latestRest+1), str(latestRun), str(latestMeal),datetime.datetime.now())
-        st.save()
+        stNew = DogStatus(1,latestStatus.ip, str(latestWalk), str(latestRest+1), str(latestRun), str(latestMeal),datetime.datetime.now())
+        stNew.save()
+        print("saved")
     elif(int(status) == 2):
-        st = DogStatus(latestStatus.ip, latestWalk, latestRest, latestRun+1, latestMeal,datetime.datetime.now())
-        st.save()
+        stNew = DogStatus(1, walking = latestWalk, resting = latestRest, running = latestRun + 1, accumulatedMeal = latestMeal, Date = datetime.datetime.now())
+        stNew.save()
+        print("saved")
         
-
+    
     
     
     
