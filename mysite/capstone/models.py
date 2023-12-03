@@ -28,6 +28,7 @@ class DogStatus(models.Model):
     class Meta:
         db_table = 'DogStatus'
         managed = True
+        
 
 class mealAmount(models.Model):
     #급식기 ip
