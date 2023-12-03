@@ -7,13 +7,12 @@ from .models import mealAmount
 from .models import DogStatus
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
-from rest_framework import generics
+# from rest_framework import generics
 from django.core import serializers
 from django.db.models import Sum
 import datetime
-import serial
+# import serial
 import pickle
-
 
 def index(request):
     activity = Activity.objects.all()
@@ -24,6 +23,8 @@ def insertactivity(request, ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z):
     print(ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z)
     ac = Activity(ip=ip, Acc_x = Acc_x,Acc_y = Acc_y,Acc_z = Acc_z,Gyro_x=Gyro_x, Gyro_y=Gyro_y, Gyro_z=Gyro_z, DateTime=datetime.datetime.now())
     ac.save()
+    if(Activity.objects.count() % 10 == 0):
+        storeStatus()
     return HttpResponse("save done")
 
 def activity(request):
@@ -39,8 +40,6 @@ def insertStatus(request, ip, walking, resting, running, accumulatedMeal):
     print(ip, walking, resting, running)
     st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = calculateMealAmount(), Date = datetime.datetime.now())
     st.save()
-    if(Activity.objects.count % 10 == 0):
-        storeStatus()
     return HttpResponse("status saved")
 
 def calculateMealAmount():
@@ -52,7 +51,7 @@ def calculateMealAmount():
     print(mealAmount)
     return mealAmount
 
-file_path = './model1 (1).pkl'
+file_path = "C:/Users/home/downloads/model1 (1).pkl"
 with open(file_path , 'rb') as f:
     loaded_model = pickle.load(f)
 
@@ -65,7 +64,7 @@ def storeStatus():
     avgGyro_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_z'))
 
     status = loaded_model([[avgAcc_x,avgAcc_y,avgAcc_z,avgGyro_x,avgGyrp_y,avgGyro_z]])[0]
-    
+    print(status)
     latestStatus = DogStatus.objects.order_by('-id').first()
     latestWalk = int(latestStatus.walking) 
     latestRest = int(latestStatus.resting) 
