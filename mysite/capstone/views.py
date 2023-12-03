@@ -14,6 +14,7 @@ import datetime
 # import serial
 import pickle
 
+
 def index(request):
     activity = Activity.objects.all()
     print(activity.values()[0]['ip'])
@@ -33,53 +34,56 @@ def activity(request):
     return HttpResponse(item, status=200)
 
 def getmealAmount(request):
-    resultMealAmount = calculateMealAmount()
+    latestStatus = DogStatus.objects.order_by('-id').first()
+    resultMealAmount = latestStatus.values('accumulatedMeal')
     return HttpResponse(resultMealAmount)
 
-def insertStatus(request, ip, walking, resting, running, accumulatedMeal):
+def insertStatus(request, ip, walking, resting, running):
     print(ip, walking, resting, running)
-    st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = calculateMealAmount(), Date = datetime.datetime.now())
+    mealAmount = int(walking)//60 + int(running)//30 + int(resting)//180
+    st = DogStatus(ip = ip, walking = walking, resting = resting, running = running, accumulatedMeal = mealAmount, Date = datetime.datetime.now())
     st.save()
     return HttpResponse("status saved")
 
-def calculateMealAmount():
-    # 디비 쿼리 호출 하고 -> 밥량 계산    
-    # dogStatus = DogStatus.objects.all()
-    mealAmount = 0
-    latestStatus = DogStatus.objects.order_by('-id').first()
-    mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
-    print(mealAmount)
-    return mealAmount
+# def calculateMealAmount():
+#     # 디비 쿼리 호출 하고 -> 밥량 계산    
+#     # dogStatus = DogStatus.objects.all()
+    
+#     latestStatus = DogStatus.objects.order_by('-id').first()
+#     # mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
+#     print(mealAmount)
+#     return mealAmount
 
 file_path = "C:/Users/home/downloads/model1 (1).pkl"
 with open(file_path , 'rb') as f:
     loaded_model = pickle.load(f)
 
 def storeStatus():
-    avgAcc_x = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_x')) 
-    avgAcc_y = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_y'))
-    avgAcc_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_z'))
-    avgGyro_x = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_x'))
-    avgGyrp_y = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_y'))
-    avgGyro_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_z'))
+    avgAcc_x = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_x'))['Acc_x__sum']//10
+    avgAcc_y = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_y'))['Acc_y__sum']//10
+    avgAcc_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Acc_z'))['Acc_z__sum']//10
+    avgGyro_x = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_x'))['Gyro_x__sum']//10
+    avgGyrp_y = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_y'))['Gyro_y__sum']//10
+    avgGyro_z = Activity.objects.all().order_by('-id')[:10].aggregate(Sum('Gyro_z'))['Gyro_z__sum']//10
 
-    status = loaded_model([[avgAcc_x,avgAcc_y,avgAcc_z,avgGyro_x,avgGyrp_y,avgGyro_z]])[0]
+    status = loaded_model.predict([[avgAcc_x,avgAcc_y,avgAcc_z,avgGyro_x,avgGyrp_y,avgGyro_z]])[0]
     print(status)
     latestStatus = DogStatus.objects.order_by('-id').first()
-    latestWalk = int(latestStatus.walking) 
-    latestRest = int(latestStatus.resting) 
-    latestRun = int(latestStatus.running) 
-    latestMeal = int(latestStatus.accumulatedMeal)
+    latestWalk = latestStatus.walking
+    latestRest = latestStatus.resting
+    latestRun = latestStatus.running 
+    latestMeal = latestStatus.accumulatedMeal
 
-    st = DogStatus(latestStatus.ip, latestWalk, latestRest, latestRun, latestMeal,datetime.datetime.now())
+    print(latestMeal)
+    st = DogStatus(latestStatus.ip, latestWalk, latestRest, latestRun, latestMeal, datetime.datetime.now())
     if(int(status) == 0):
-        st = DogStatus(latestStatus.ip, str(latestWalk+1), str(latestRest), str(latestRun), str(latestMeal),datetime.datetime.now())
+        st = DogStatus(latestStatus.ip, latestWalk + 1, latestRest, latestRun, latestMeal,datetime.datetime.now())
         st.save()
     elif(int(status) == 1):
         st = DogStatus(latestStatus.ip, str(latestWalk), str(latestRest+1), str(latestRun), str(latestMeal),datetime.datetime.now())
         st.save()
     elif(int(status) == 2):
-        st = DogStatus(latestStatus.ip, str(latestWalk), str(latestRest), str(latestRun+1), str(latestMeal),datetime.datetime.now())
+        st = DogStatus(latestStatus.ip, latestWalk, latestRest, latestRun+1, latestMeal,datetime.datetime.now())
         st.save()
         
 
