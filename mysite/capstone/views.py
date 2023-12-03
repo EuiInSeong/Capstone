@@ -80,7 +80,7 @@ def storeStatus():
         stNew.save()
         print("saved")
     elif(int(status) == 1):
-        stNew = DogStatus(1,latestStatus.ip, str(latestWalk), str(latestRest+1), str(latestRun), str(latestMeal),datetime.datetime.now())
+        stNew = DogStatus(1, walking = latestWalk, resting = latestRest+1, running = latestRun, accumulatedMeal = latestMeal, Date = datetime.datetime.now())
         stNew.save()
         print("saved")
     elif(int(status) == 2):
