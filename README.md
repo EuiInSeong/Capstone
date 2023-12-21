@@ -39,4 +39,13 @@ We thought the obesity rate would also decrease.
 -  It is classified according to the collected data, and if the activity data received from the server is within the classification range (1 to 5), feed appropriate for that range is discharged.
 -  If the activity level does not correspond to the first classification range of 1, the smart feeder will not dispense food even when the pet is detected.
 -  Based on sensor data generated in real time from smart clothing, behavioral patterns and the amount of behavior for each pattern can be analyzed and integrated with the meal amount to automatically provide food.
-  
+<p align="center">
+
+</p>
+
+<br>
+
+## Tech Stack
+
+| mysql | django | Arduino  | react | 
+| :---: | :----: | :-------:| :---: |  
