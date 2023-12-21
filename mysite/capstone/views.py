@@ -87,7 +87,7 @@ def storeStatus():
     latestWalk = latestStatus.walking
     latestRest = latestStatus.resting
     latestRun = latestStatus.running 
-    latestMeal = latestWalk + latestRest*2 + latestRun*3
+    latestMeal = (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
     print(status)
 
     st = DogStatus(ip = dogIP, walking = latestWalk, resting = latestRest, running = latestRun, accumulatedMeal = latestMeal, Date =  datetime.datetime.now())
