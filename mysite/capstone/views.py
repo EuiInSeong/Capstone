@@ -87,6 +87,7 @@ def storeStatus():
     latestWalk = latestStatus.walking
     latestRest = latestStatus.resting
     latestRun = latestStatus.running 
+    
     latestMeal = (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
     print(status)
 
