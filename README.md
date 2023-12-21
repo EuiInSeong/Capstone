@@ -49,3 +49,8 @@ We thought the obesity rate would also decrease.
 
 | mysql | django | Arduino  | react | scikit-learn |
 | :---: | :----: | :-------:| :---: | :----------: |
+
+![tech](https://github.com/JaeHyun154/Cabstone/assets/129927776/37160e8a-b0c1-486d-b332-8fd3977193eb)
+
+<br><br>
+
