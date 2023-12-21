@@ -34,8 +34,8 @@ def activity(request):
     return HttpResponse(item, status = 200)
 
 def status(request):
-    queryset = DogStatus.obejcts.all()
-    item = serializers.serilizer("json", queryset)
+    queryset = DogStatus.objects.all()
+    item = serializers.serialize("json", queryset)
     return HttpResponse(item, status = 200)
 
 def getmealAmount(request):
@@ -60,8 +60,6 @@ def insertStatus(request, ip, walking, resting, running, accumulatedMeal):
     return HttpResponse("status saved")
 
 def calculateMealAmount():
-    # 디비 쿼리 호출 하고 -> 밥량 계산    
-    # dogStatus = DogStatus.objects.all()
     
     latestStatus = DogStatus.objects.order_by('-id').first()
     mealAmount += (int(latestStatus.walking)//60) + (int(latestStatus.running//30)) + (int(latestStatus.resting)//180)
