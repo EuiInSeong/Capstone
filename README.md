@@ -47,5 +47,5 @@ We thought the obesity rate would also decrease.
 
 ## Tech Stack
 
-| mysql | django | Arduino  | react | 
-| :---: | :----: | :-------:| :---: |  
+| mysql | django | Arduino  | react | scikit-learn |
+| :---: | :----: | :-------:| :---: | :----------: |
