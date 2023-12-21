@@ -33,7 +33,7 @@ class DogStatus(models.Model):
 class mealAmount(models.Model):
     #급식기 ip
     ip = models.CharField(max_length = 100, blank = True,null=True)
-    DatTime = models.FloatField(blank = True, null = True)
+    DateTime = models.FloatField(blank = True, null = True)
     mealAmount = models.IntegerField(default=0)
     
     class Meta:
@@ -41,4 +41,15 @@ class mealAmount(models.Model):
         managed = True
         
     
+class Dog(models.Model):
     
+    ip = models.CharField(max_length = 100, blank = True, null= True)
+    Age = models.IntegerField(blank = True, null = True)
+    Name = models.CharField(max_length = 100, blank = True, null = True)
+    Breed = models.CharField(max_length = 100, blank = True, null = True)
+    Weight = models.FloatField(blank = True, null = True)
+    Height = models.FloatField(blank = True, null = True)
+    
+    class Meta:
+        db_table = 'Dog'
+        managed = True

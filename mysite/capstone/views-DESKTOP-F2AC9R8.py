@@ -14,6 +14,7 @@ import datetime
 # import serial
 import pickle
 import json
+from .models import Dog
 
 def index(request):
     activity = Activity.objects.all()
@@ -24,8 +25,8 @@ def insertactivity(request, ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z):
     print(ip, Acc_x,Acc_y,Acc_z,Gyro_x, Gyro_y, Gyro_z)
     ac = Activity(ip=ip, Acc_x = Acc_x,Acc_y = Acc_y,Acc_z = Acc_z,Gyro_x=Gyro_x, Gyro_y=Gyro_y, Gyro_z=Gyro_z, DateTime=datetime.datetime.now())
     ac.save()
-    if(Activity.objects.count() % 10 == 0):
-        storeStatus()
+    # if(Activity.objects.count() % 10 == 0):
+    storeStatus()
     return HttpResponse("save done")
 
 def activity(request):
@@ -34,8 +35,13 @@ def activity(request):
     return HttpResponse(item, status = 200)
 
 def status(request):
-    queryset = DogStatus.obejcts.all()
-    item = serializers.serilizer("json", queryset)
+    queryset = DogStatus.objects.all()
+    item = serializers.serialize("json", queryset)
+    return HttpResponse(item, status = 200)
+
+def dogSearch(request):
+    queryset = Dog.objects.all()
+    item = serializers.serialize("json", queryset)
     return HttpResponse(item, status = 200)
 
 def getmealAmount(request):
@@ -73,21 +79,31 @@ with open(file_path , 'rb') as f:
     loaded_model = pickle.load(f)
 
 def storeStatus():
-    avgAcc_x = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_x'))['Acc_x__sum']//10
-    avgAcc_y = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_y'))['Acc_y__sum']//10
-    avgAcc_z = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_z'))['Acc_z__sum']//10
-    avgGyro_x = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_x'))['Gyro_x__sum']//10
-    avgGyrp_y = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_y'))['Gyro_y__sum']//10
-    avgGyro_z = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_z'))['Gyro_z__sum']//10
+    # avgAcc_x = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_x'))['Acc_x__sum']//10
+    # avgAcc_y = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_y'))['Acc_y__sum']//10
+    # avgAcc_z = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Acc_z'))['Acc_z__sum']//10
+    # avgGyro_x = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_x'))['Gyro_x__sum']//10
+    # avgGyrp_y = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_y'))['Gyro_y__sum']//10
+    # avgGyro_z = Activity.objects.all().order_by('-DateTime')[:10].aggregate(Sum('Gyro_z'))['Gyro_z__sum']//10
     dogIP = Activity.objects.all().order_by('-DateTime')[0].ip
     
-    status = loaded_model.predict([[int(avgAcc_x),int(avgAcc_y),int(avgAcc_z),int(avgGyro_x),int(avgGyrp_y),int(avgGyro_z)]])[0]
+    # status = loaded_model.predict([[int(avgAcc_x),int(avgAcc_y),int(avgAcc_z),int(advgGyro_x),int(avgGyrp_y),int(avgGyro_z)]])[0]
+    
+    lastAcc_x = Activity.objects.all().order_by('-DateTime').first().Acc_x
+    lastAcc_y = Activity.objects.all().order_by('-DateTime').first().Acc_y
+    lastAcc_z = Activity.objects.all().order_by('-DateTime').first().Acc_z
+    lastGyro_x = Activity.objects.all().order_by('-DateTime').first().Gyro_x
+    lastGyro_y = Activity.objects.all().order_by('-DateTime').first().Gyro_y
+    lastGyro_z = Activity.objects.all().order_by('-DateTime').first().Gyro_z
+    
+    status = loaded_model.predict([[int(lastAcc_x),int(lastAcc_y),int(lastAcc_z),int(lastGyro_x),int(lastGyro_y),int(lastGyro_z)]])[0]
+
     
     latestStatus = DogStatus.objects.order_by('-Date').first()
     latestWalk = latestStatus.walking
     latestRest = latestStatus.resting
     latestRun = latestStatus.running 
-    latestMeal = latestWalk + latestRest*2 + latestRun*3
+    latestMeal = latestWalk*3 + latestRest + latestRun*6
     print(status)
 
     st = DogStatus(ip = dogIP, walking = latestWalk, resting = latestRest, running = latestRun, accumulatedMeal = latestMeal, Date =  datetime.datetime.now())
@@ -105,8 +121,10 @@ def storeStatus():
         stNew.save()
         print("saved")
         
-    
-    
+def info(request, ip, Age, Name, Breed, Weight, Height):
+    dog = Dog(ip = ip, Age = Age, Name = Name, Breed = Breed, Weight = Weight, Height = Height )
+    dog.save()
+    print("saved")
     
     
     

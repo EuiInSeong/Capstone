@@ -8,4 +8,6 @@ urlpatterns = [
     path("activity" ,views.activity, name = 'activity'),
     path("insertstatus/<str:ip>/<str:walking>/<str:resting>/<str:running>/<str:accumulatedMeal>", views.insertStatus, name = "insertstatus"),
     path("status", views.status, name = "status"),
+    path("info/<str:ip>/<str:Age>/<str:Name>/<str:Breed>/<str:Weight>/<str:Height>", views.info, name = "info"),
+    path("dogSearch", views.dogSearch, name = "dogSearch"),
 ]
