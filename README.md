@@ -54,3 +54,21 @@ We thought the obesity rate would also decrease.
 
 <br><br>
 
+## Features
+
+### Smart service
+- 만약 주인이 없어도 반려견에게 센서만 부착되어 있다면, 스마트 급식기에 부착된 초음파 센서가 반려견을 감지하여 활동량 data를 기반으로 자동 급식
+
+- Even if the owner is not present, if a sensor is attached to the dog, the ultrasonic sensor attached to the smart feeder detects the dog and automatically feeds the dog based on activity data.
+
+### health care services
+- 주어진 활동량을 채우지 못한다면 사료가 나오지 않아 무분별한 급식으로 인한 비만, 스트레스 문제 해결
+
+- If you do not meet the given amount of activity, no feed will be provided, solving obesity and stress problems caused by indiscriminate feeding.
+
+### Responsive web service
+- 사용자들이 어떠한 정보를 모니터링 할 수 	있고 어떤 서비스를 이용할 수 있는지 표기하기 위해 간단한 UI
+- 반려견의 활동량과 그에 따른 식사량을 확인할 수 있습니다.
+
+- Simple UI to indicate what information users can monitor and what services they can use.
+- You can check your dog's activity level and corresponding meal amount.
