@@ -72,3 +72,21 @@ We thought the obesity rate would also decrease.
 
 - Simple UI to indicate what information users can monitor and what services they can use.
 - You can check your dog's activity level and corresponding meal amount.
+
+
+### Hardware
+-급식기<br>
+![image](https://github.com/JaeHyun154/Cabstone/assets/129927776/e2acf249-21b5-4a2f-b124-180d77d0bdbe)
+![image](https://github.com/JaeHyun154/Cabstone/assets/129927776/54a49f62-02df-4cc1-8f1e-b337b19f4468)
+![image](https://github.com/JaeHyun154/Cabstone/assets/129927776/74be7dba-b606-47f7-ba65-29986b70f469)
+
+![KakaoTalk_20231222_152539083](https://github.com/JaeHyun154/Cabstone/assets/129927776/3d1e8cbf-3015-467f-bb98-6d51a44117f5)
+
+-Clothes sensor<br>
+![image](https://github.com/JaeHyun154/Cabstone/assets/129927776/368acc4a-df20-46b7-b713-2290c0645528)
+![image](https://github.com/JaeHyun154/Cabstone/assets/129927776/b0cfd5d5-2905-4d0c-b351-bd6a01809f3e)
+
+
+
+
+
