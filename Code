@@ -1,0 +1,101 @@
+#include <Servo.h>
+
+Servo myservo;  // 서보모터 객체 생성
+const int trigPin = 7;
+const int echoPin = 6;
+
+unsigned long previousMillis = 0;  // millis() 함수를 사용하여 경과 시간을 추적하기 위한 변수
+const long interval = 1000;  // 1초 동안 대기
+
+void setup() {
+  myservo.attach(3);    // 서보모터를 3번 핀에 연결
+  myservo.write(100);    // 초기 위치 100도로 설정
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);    // 시리얼 통신 초기화
+  delay(1000);          // 충분한 초기화 대기 시간
+}
+
+void moveServo(int angle) {
+  myservo.write(angle);
+  delay(1000);  // 1초 동안 대기
+  myservo.detach();  // 모터 정지
+}
+
+void loop() {
+  // 초음파 센서로 거리 측정
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  int duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  // 거리가 25cm 이하이면
+  if (distance <= 25) {
+    Serial.println("Requesting food amount...");
+    // 상대 측에 밥량 요청
+    delay(1000);  // 충분한 시간을 주고
+
+    // 상대 측에서 밥량 응답 받기
+    while (Serial.available() <= 0) {
+      // 기다리는 동안 아무 작업도 수행하지 않음
+    }
+
+    String receivedString = Serial.readStringUntil('\n');
+    
+    // 응답 받은 밥량을 정수로 변환
+    int mealAmount = receivedString.toInt();
+
+    Serial.print("Received food amount: ");
+    Serial.println(mealAmount);
+
+    // 받은 밥량에 따라 모터 동작
+    // mealAmount 5구간으로 설정
+    if (mealAmount > 100 && mealAmount <= 200) {
+      Serial.println("Feed 1...");
+      moveServo(10);
+      moveServo(100);
+    } else if (mealAmount > 200 && mealAmount <= 300) {
+      Serial.println("Feed 2...");
+      for (int i = 0; i < 2; i++) {
+        moveServo(10);
+        moveServo(100);
+      }
+    } else if (mealAmount > 300 && mealAmount <= 400 ) {
+      Serial.println("Feed 3...");
+      for (int i = 0; i < 3; i++) {
+        moveServo(10);
+        moveServo(100);
+      }
+    }  else if (mealAmount > 400 && mealAmount <= 500 ) {
+      Serial.println("Feed 4...");
+      for (int i = 0; i < 3; i++) {
+        moveServo(10);
+        moveServo(100);
+      }
+    }  else if (mealAmount > 500 ) {
+      Serial.println("Feed 5...");
+      for (int i = 0; i < 3; i++) {
+        moveServo(10);
+        moveServo(100);
+      }
+    } else {
+      Serial.println("Not feeding, invalid food amount.");
+    }
+
+    // 모터를 다시 사용해야 할 때 attach
+    myservo.attach(3);
+  }
+
+  // 비동기적인 대기를 위한 millis() 함수 사용
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    // 시간 간격이 지났을 때 다음 동작 수행
+    previousMillis = currentMillis;
+
+    // 여기에 추가적인 동작을 수행할 수 있음
+  }
+}
